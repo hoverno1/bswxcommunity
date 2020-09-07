@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dn.mapper.UserMapper">
+    <select id="queryUserList" resultType="User"> select * from author_login</select>
+    <select id="queryPostList" resultType="Post"> select * from author_post</select>
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="aid">insert into
+    author_login(aid,author,password,status,avatar)values(#{aid},#{author},#{password},#{status},#{avatar})
+    </insert>
+    <update id="insertAvatar" parameterType="User">
+        UPDATE author_login SET avatar=#{avatar} WHERE aid=#{aid}
+    </update>
+    <select id="queryAid" resultType="User"> select * from author_login where author = #{author}</select>
+    <select id="queryAvatar" resultType="User"> select * from author_login where aid = #{aid}</select>
+    <insert id="insertPost" parameterType="Post" useGeneratedKeys="true" keyProperty="postId">insert into
+    author_post(postId,aid,date,disease,imgSrc,detail,avatar)values(#{postId},#{aid},#{date},#{disease},#{imgSrc},#{detail},#{avatar})
+    </insert>
+    <select id="testName" resultType="int"> select count(*) from author_login where author = #{author}</select>
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="mid">insert into
+    message(mid,postId,nid,message)values(#{mid},#{postId},#{nid},#{message})
+    </insert>
+    <select id="queryMessageList" resultType="Message"> select * from message where postId = #{postId}</select>
+    <insert id="testScore" parameterType="Score">
+        insert ignore into score (aid,postId) values (#{scoreId},#{postId});
+    </insert>
+    <update id="addScore" parameterType="Score">
+        update score SET score=score+1 WHERE aid=#{scoreId} and postId = #{postId}
+    </update>
+    <select id="queryAidByName" resultType="java.lang.String"> select aid from author_login where author = #{author}</select>
+    <select id="findAllByAid" resultType="Post"> select * from author_post where postId in <foreach collection="postIds" item="postId" open="(" close=")" separator=","> #{postId}</foreach></select>
+</mapper>
